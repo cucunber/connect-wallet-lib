@@ -16,11 +16,11 @@ This package provides the ability to connect Wallets to website or application v
 
 NPM: 
 ```sh
-npm install https://github.com/Rock-n-Block/connect-wallet-lib.git#master
+npm install https://github.com/cucunber/connect-wallet-lib#master
 ```
 Yarn:
 ```sh
-yarn add https://github.com/Rock-n-Block/connect-wallet-lib.git#master
+yarn add https://github.com/cucunber/connect-wallet-lib#master
 ```
 
 #### 2. Import and initialize ConnectWallet in project.
