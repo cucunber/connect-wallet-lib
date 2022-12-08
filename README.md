@@ -205,11 +205,20 @@ List of `Block explorers`:
 | 250     | https://explorer.fantom.network/"              |
 | 4002    | https://explorer.testnet.fantom.network/       |
 
-##### Pass configuration and create first connection
+#### 6. Pass configuration and create first connection
 
 ```typescript
 connectWallet.connect(provider, network, settings).then(
   (connected: boolean) => console.log('connect wallet: ', connected),
   (err: any) => console.log('connect wallet error: ', err)
+);
+```
+
+#### 7. Get accounts
+
+```typescript
+connectWallet.getAccounts().subscribe(
+  (user: any) => console.log('user account: ', user),
+  (err: any) => console.log('user account error: ', err)
 );
 ```
