@@ -2,6 +2,8 @@ import { WalletLinkProvider } from "walletlink";
 import { Contract } from "web3-eth-contract";
 import { AbiItem } from "web3-utils";
 
+export type TChainType = 'mainnet' | 'testnet' | 'devnet';
+
 export interface IRPCMap {
   [chainId: number]: string;
 }
@@ -131,7 +133,7 @@ export interface IKeys extends Record<string, string> {};
 export type TChainsConfig<T extends string | number | symbol, K extends string | number | symbol> = {
   [key in T]: {
     name: string,
-    network: INetwork
+    network: Partial<Record<TChainType, INetwork>>
     provider: {
       [provider in K]?: IProvider
     },
