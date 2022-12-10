@@ -5,7 +5,8 @@ export enum chainsEnum {
 }
 export enum providersEnum {
   MetaMask = 'MetaMask',
-  WalletConnect = 'WalletConnect'
+  WalletConnect = 'WalletConnect',
+  GameStop = 'GameStop',
 }
 
 export interface IConnectWallet {
@@ -29,16 +30,23 @@ export const chains = {
     provider: {
       MetaMask: { name: "MetaMask" },
       WalletConnect: { name: "WalletsConnect" },
+      GameStop: { name: "GameStop" },
     },
   },
   [chainsEnum.Ethereum]: {
     name: chainsEnum.Ethereum,
     network: {
-      chainID: is_production ? 1 : 4,
+      mainnet: {
+        chainID: 1,
+      },
+      testnet: {
+        chainID: 4,
+      }
     },
     provider: {
       MetaMask: { name: "MetaMask" },
       WalletConnect: { name: "WalletsConnect" },
+      GameStop: { name: "GameStop" },
     },
     keys: {
       infuraId: '2d76b686b0484e9ebecbaddd23cd37c7'
@@ -51,7 +59,7 @@ export const connectWallet = (chainName: chainsEnum): IConnectWallet => {
 
   return {
     wallets: ["MetaMask"],
-    network: chain.network,
+    network: chain.network.mainnet,
     provider: chain.provider,
     settings: { providerType: true },
     keys: chain.keys

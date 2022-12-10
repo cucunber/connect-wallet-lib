@@ -29,7 +29,7 @@ import {
   providerError,
 } from "./errors";
 import { initialSettings } from "./config";
-import { isConfigSufficient, normalizeNetworkConfig } from "./utils";
+import { isConfigSufficient, normalizeNetworkConfig, set } from "./utils";
 
 const { chainsMap, chainIDMap } = parameters;
 export class ConnectWallet {
@@ -41,7 +41,7 @@ export class ConnectWallet {
   private settings: ISettings;
 
   private Web3: Web3;
-  private contracts: IContract = {};
+  private contracts = {};
   private allTxSubscribers = [];
 
   /**
@@ -333,21 +333,13 @@ export class ConnectWallet {
    * able to use contract(name) function to get contract from web3 and use contract methods.
    *
    * @param {IAddContract} contract contract object with contract name, address and abi.
-   * @returns return true if contact added successfully or false if have some errors.
-   * @example connectWallet.addContract(contract).then((contractStatus: boolean) => console.log(contractStatus), (err) => console.log(err));
+   * @returns return all contracts
+   * @example connectWallet.addContract(contract);
    */
-  public addContract(contract: IAddContract): Promise<boolean> {
-    return new Promise<any>((resolve, reject) => {
-      try {
-        this.contracts[contract.name] = new this.Web3.eth.Contract(
-          contract.abi,
-          contract.address
-        );
-        resolve(true);
-      } catch {
-        reject(false);
-      }
-    });
+  public addContracts<T extends IAddContract>(contracts: Record<T['name'], T>) {
+    const newContracts = set(this.contracts, contracts)
+    this.contracts = newContracts;
+    return this.contracts
   }
 
   /**
@@ -357,7 +349,21 @@ export class ConnectWallet {
    * @returns return contract parameters and methods.
    * @example connectWallet.Contract(ContractName);
    */
-  public Contract = (name: string): ContractWeb3 => this.contracts[name];
+  public Contract = (
+    name: string
+  ): Promise<ContractWeb3> =>
+    new Promise((resolve, reject) => {
+      if(!this.contracts.hasOwnProperty(name)){
+        reject(`There is no contract with name: ${name}`)
+      }
+      try {
+        const { address, abi } = this.contracts[name];
+        const contractInstance = new this.Web3.eth.Contract(abi, address);
+        resolve(contractInstance);
+      } catch (e) {
+        reject(e);
+      }
+    });
 
   /**
    * Get access to use Web3. Return Web3 variable to use it methods and parameters.

@@ -136,10 +136,10 @@ export declare class ConnectWallet {
      * able to use contract(name) function to get contract from web3 and use contract methods.
      *
      * @param {IAddContract} contract contract object with contract name, address and abi.
-     * @returns return true if contact added successfully or false if have some errors.
-     * @example connectWallet.addContract(contract).then((contractStatus: boolean) => console.log(contractStatus), (err) => console.log(err));
+     * @returns return all contracts
+     * @example connectWallet.addContract(contract);
      */
-    addContract(contract: IAddContract): Promise<boolean>;
+    addContracts<T extends IAddContract>(contracts: Record<T['name'], T>): {};
     /**
      * Get contract by providing contract name. If you don't have contracts use addContract function to initialize it.
      *
@@ -147,7 +147,7 @@ export declare class ConnectWallet {
      * @returns return contract parameters and methods.
      * @example connectWallet.Contract(ContractName);
      */
-    Contract: (name: string) => ContractWeb3;
+    Contract: (name: string) => Promise<ContractWeb3>;
     /**
      * Get access to use Web3. Return Web3 variable to use it methods and parameters.
      *

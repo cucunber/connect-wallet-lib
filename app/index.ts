@@ -15,9 +15,12 @@ const userState = {
 const connectButton = document.getElementById("connect");
 const disconnectButton = document.getElementById("disconnect");
 
+//@ts-ignore
+wallet.addContracts({ name: 'eth', abi: {}, address: ''})
+
 connectButton.addEventListener("click", async function () {
   const connected = await wallet.connect(
-    provider.MetaMask,
+    provider.GameStop,
     network,
     settings,
     keys,

@@ -80,7 +80,21 @@ var ConnectWallet = /** @class */ (function () {
          * @returns return contract parameters and methods.
          * @example connectWallet.Contract(ContractName);
          */
-        this.Contract = function (name) { return _this.contracts[name]; };
+        this.Contract = function (name) {
+            return new Promise(function (resolve, reject) {
+                if (!_this.contracts.hasOwnProperty(name)) {
+                    reject("There is no contract with name: ".concat(name));
+                }
+                try {
+                    var _a = _this.contracts[name], address = _a.address, abi = _a.abi;
+                    var contractInstance = new _this.Web3.eth.Contract(abi, address);
+                    resolve(contractInstance);
+                }
+                catch (e) {
+                    reject(e);
+                }
+            });
+        };
         /**
          * Get access to use Web3. Return Web3 variable to use it methods and parameters.
          *
@@ -350,20 +364,13 @@ var ConnectWallet = /** @class */ (function () {
      * able to use contract(name) function to get contract from web3 and use contract methods.
      *
      * @param {IAddContract} contract contract object with contract name, address and abi.
-     * @returns return true if contact added successfully or false if have some errors.
-     * @example connectWallet.addContract(contract).then((contractStatus: boolean) => console.log(contractStatus), (err) => console.log(err));
+     * @returns return all contracts
+     * @example connectWallet.addContract(contract);
      */
-    ConnectWallet.prototype.addContract = function (contract) {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            try {
-                _this.contracts[contract.name] = new _this.Web3.eth.Contract(contract.abi, contract.address);
-                resolve(true);
-            }
-            catch (_a) {
-                reject(false);
-            }
-        });
+    ConnectWallet.prototype.addContracts = function (contracts) {
+        var newContracts = (0, utils_1.set)(this.contracts, contracts);
+        this.contracts = newContracts;
+        return this.contracts;
     };
     /**
      * Subscribe to events from current connection: connect, disconnect, chain change, account change and etc.

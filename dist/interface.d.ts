@@ -1,6 +1,7 @@
 import { WalletLinkProvider } from "walletlink";
 import { Contract } from "web3-eth-contract";
 import { AbiItem } from "web3-utils";
+export declare type TChainType = 'mainnet' | 'testnet' | 'devnet';
 export interface IRPCMap {
     [chainId: number]: string;
 }
@@ -92,9 +93,9 @@ export interface IMessageProvider {
     };
     provider?: string;
 }
-export interface IContract {
-    [index: string]: Contract;
-}
+export declare type IContract<T extends Record<string, any> = {}> = {
+    [name in keyof T]: IAddContract;
+};
 export interface INoNameContract {
     address: string;
     abi: AbiItem | Array<AbiItem>;
@@ -112,7 +113,7 @@ export interface IKeys extends Record<string, string> {
 export declare type TChainsConfig<T extends string | number | symbol, K extends string | number | symbol> = {
     [key in T]: {
         name: string;
-        network: INetwork;
+        network: Partial<Record<TChainType, INetwork>>;
         provider: {
             [provider in K]?: IProvider;
         };
@@ -122,5 +123,6 @@ export declare type TChainsConfig<T extends string | number | symbol, K extends 
 declare global {
     interface Window {
         onto: WalletLinkProvider;
+        gamestop: WalletLinkProvider;
     }
 }

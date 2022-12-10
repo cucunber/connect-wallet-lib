@@ -109,8 +109,8 @@ export interface IMessageProvider {
   provider?: string;
 }
 
-export interface IContract {
-  [index: string]: Contract;
+export type IContract<T extends Record<string, any> = {}> = {
+  [name in keyof T]: IAddContract;
 }
 
 export interface INoNameContract {
@@ -144,5 +144,6 @@ export type TChainsConfig<T extends string | number | symbol, K extends string |
 declare global {
   interface Window {
     onto: WalletLinkProvider;
+    gamestop: WalletLinkProvider;
   }
 }
