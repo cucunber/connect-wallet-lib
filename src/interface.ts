@@ -2,7 +2,7 @@ import { WalletLinkProvider } from "walletlink";
 import { Contract } from "web3-eth-contract";
 import { AbiItem } from "web3-utils";
 
-export type TChainType = 'mainnet' | 'testnet' | 'devnet';
+export type TChainType = "mainnet" | "testnet" | "devnet";
 
 export interface IRPCMap {
   [chainId: number]: string;
@@ -32,14 +32,14 @@ export interface IEvent {
 }
 
 export interface ICheckNet {
-  chain: boolean,
-  error?: IError,
+  chain: boolean;
+  error?: IError;
 }
 
 export interface INativeCurrency {
-  name: string,
-  symbol: string,
-  decimals: number,
+  name: string;
+  symbol: string;
+  decimals: number;
 }
 
 export interface IEventError extends IEvent {
@@ -111,7 +111,7 @@ export interface IMessageProvider {
 
 export type IContract<T extends Record<string, any> = {}> = {
   [name in keyof T]: IAddContract;
-}
+};
 
 export interface INoNameContract {
   address: string;
@@ -128,18 +128,40 @@ export interface IChain {
   hex: string;
 }
 
-export interface IKeys extends Record<string, string> {};
+export interface IKeys extends Record<string, string> {}
 
-export type TChainsConfig<T extends string | number | symbol, K extends string | number | symbol> = {
-  [key in T]: {
-    name: string,
-    network: Partial<Record<TChainType, INetwork>>
-    provider: {
-      [provider in K]?: IProvider
-    },
-    keys?: IKeys
-  }
-}
+export type TProvider<P extends string> = {
+  [provider in P]?: IProvider;
+};
+
+export type TChainConfig<
+  P extends string,
+  N extends Partial<Record<TChainType, INetwork>>
+> = {
+  name: string;
+  network: N;
+  providers: (TProvider<P> | P)[];
+  keys?: IKeys;
+};
+
+export type TChainsConfig<T extends string, P extends string, N extends Partial<Record<TChainType, INetwork>> = Partial<Record<TChainType, INetwork>>> = {
+  [key in T]: TChainConfig<P, N>;
+};
+
+export type TAppliedChainsConfig<
+  C extends string,
+  P extends string,
+  T extends TChainsConfig<C, P>
+> = {
+  [key in C]: {
+    name: T[key]["name"];
+    network: T[key]["network"];
+    providers: {
+      [provider in P]: IProvider;
+    };
+    keys: T[key]["keys"];
+  };
+};
 
 declare global {
   interface Window {

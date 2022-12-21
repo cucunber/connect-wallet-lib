@@ -1,60 +1,53 @@
-import { IKeys, INetwork, IProvider, ISettings, TChainsConfig } from "interface";
-export enum chainsEnum {
-  Ethereum = 'Ethereum',
-  "Binance-Smart-Chain" = "Binance-Smart-Chain",
-}
-export enum providersEnum {
-  MetaMask = 'MetaMask',
-  WalletConnect = 'WalletConnect',
-  GameStop = 'GameStop',
-}
+import {
+  IKeys,
+  INetwork,
+  IProvider,
+  ISettings,
+  TChainsConfig,
+} from "interface";
+import { createConfig } from "../../src/utils";
 
-export interface IConnectWallet {
-  wallets: string[];
-  network: INetwork;
-  provider: {
-    [index in providersEnum]?: IProvider;
-  };
-  settings: ISettings;
-  keys: IKeys;
-}
+const networks = ["Ethereum", "Binance"] as const;
+const providers = ["MetaMask", "GameStop", "WalletConnect"] as const;
 
 export const is_production = true;
 
-export const chains = {
-  [chainsEnum["Binance-Smart-Chain"]]: {
-    name: chainsEnum["Binance-Smart-Chain"],
+export const chains = createConfig<
+  typeof networks[number],
+  typeof providers[number]
+>({
+  Binance: {
+    name: "Binance",
     network: {
-      chainID: is_production ? 56 : 97,
+      mainnet: { chainID: 1 },
+      testnet: { chainID: 2 },
     },
-    provider: {
-      MetaMask: { name: "MetaMask" },
-      WalletConnect: { name: "WalletsConnect" },
-      GameStop: { name: "GameStop" },
-    },
+    providers: ["MetaMask", "GameStop"],
   },
-  [chainsEnum.Ethereum]: {
-    name: chainsEnum.Ethereum,
+  Ethereum: {
+    name: "Ethereum",
     network: {
       mainnet: {
         chainID: 1,
       },
       testnet: {
         chainID: 4,
-      }
+      },
     },
-    provider: {
-      MetaMask: { name: "MetaMask" },
-      WalletConnect: { name: "WalletsConnect" },
-      GameStop: { name: "GameStop" },
-    },
+    providers: [
+      {
+        MetaMask: { name: "MetaMask" },
+        WalletConnect: { name: "WalletsConnect" },
+        GameStop: { name: "GameStop" },
+      },
+    ],
     keys: {
-      infuraId: '2d76b686b0484e9ebecbaddd23cd37c7'
-    }
+      infuraId: "2d76b686b0484e9ebecbaddd23cd37c7",
+    },
   },
-} as TChainsConfig<chainsEnum, providersEnum>;
+});
 
-export const connectWallet = (chainName: chainsEnum): IConnectWallet => {
+export const connectWallet = (chainName) => {
   const chain = chains[chainName];
 
   return {
@@ -62,6 +55,6 @@ export const connectWallet = (chainName: chainsEnum): IConnectWallet => {
     network: chain.network.mainnet,
     provider: chain.provider,
     settings: { providerType: true },
-    keys: chain.keys
+    keys: chain.keys,
   };
 };

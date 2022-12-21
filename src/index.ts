@@ -19,6 +19,8 @@ import {
   IEvent,
   IEventError,
   IKeys,
+  TChainsConfig,
+  TAppliedChainsConfig,
 } from "./interface";
 import { parameters, addChains } from "./helpers";
 import { AbstractConnector, AbstractConstructor } from "abstract-connector";
@@ -37,8 +39,11 @@ export class ConnectWallet {
   private providerName: string;
   private connectors: AbstractConstructor[] = [];
 
+  private provider: IProvider;
   private network: INetwork;
   private settings: ISettings;
+
+  public config: TAppliedChainsConfig<any, any, any>;
 
   private Web3: Web3;
   private contracts = {};
@@ -61,6 +66,17 @@ export class ConnectWallet {
    */
   public use = (wallets: AbstractConstructor[]): ConnectWallet => {
     this.connectors = wallets;
+    return this;
+  };
+
+  public setChainsConfig = <
+    C extends string,
+    P extends string,
+    T extends TChainsConfig<C, P>
+  >(
+    config: TAppliedChainsConfig<C, P, T>
+  ): ConnectWallet => {
+    this.config = config;
     return this;
   };
 
@@ -336,10 +352,10 @@ export class ConnectWallet {
    * @returns return all contracts
    * @example connectWallet.addContract(contract);
    */
-  public addContracts<T extends IAddContract>(contracts: Record<T['name'], T>) {
-    const newContracts = set(this.contracts, contracts)
+  public addContracts<T extends IAddContract>(contracts: Record<T["name"], T>) {
+    const newContracts = set(this.contracts, contracts);
     this.contracts = newContracts;
-    return this.contracts
+    return this.contracts;
   }
 
   /**
@@ -349,12 +365,10 @@ export class ConnectWallet {
    * @returns return contract parameters and methods.
    * @example connectWallet.Contract(ContractName);
    */
-  public Contract = (
-    name: string
-  ): Promise<ContractWeb3> =>
+  public Contract = (name: string): Promise<ContractWeb3> =>
     new Promise((resolve, reject) => {
-      if(!this.contracts.hasOwnProperty(name)){
-        reject(`There is no contract with name: ${name}`)
+      if (!this.contracts.hasOwnProperty(name)) {
+        reject(`There is no contract with name: ${name}`);
       }
       try {
         const { address, abi } = this.contracts[name];

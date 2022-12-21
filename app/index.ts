@@ -1,12 +1,10 @@
 import { ConnectWallet } from "../src/index";
-import { chainsEnum, connectWallet } from "./config";
+import { chains, connectWallet } from "./config";
 import { IError } from "interface";
 import { MetaMask } from 'metamask-wallet/dist'
 
 const wallet = new ConnectWallet().use([MetaMask]);
-const { network, provider, settings, keys } = connectWallet(
-  chainsEnum.Ethereum
-);
+const { network, provider, settings, keys } = connectWallet('Ethereum');
 
 const userState = {
   address: "",
