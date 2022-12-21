@@ -32,6 +32,7 @@ import {
 } from "./errors";
 import { initialSettings } from "./config";
 import { isConfigSufficient, normalizeNetworkConfig, set } from "./utils";
+import { AnyCatcher } from "rxjs/internal/AnyCatcher";
 
 const { chainsMap, chainIDMap } = parameters;
 export class ConnectWallet {
@@ -39,11 +40,8 @@ export class ConnectWallet {
   private providerName: string;
   private connectors: AbstractConstructor[] = [];
 
-  private provider: IProvider;
   private network: INetwork;
   private settings: ISettings;
-
-  public config: TAppliedChainsConfig<any, any, any>;
 
   private Web3: Web3;
   private contracts = {};
@@ -66,17 +64,6 @@ export class ConnectWallet {
    */
   public use = (wallets: AbstractConstructor[]): ConnectWallet => {
     this.connectors = wallets;
-    return this;
-  };
-
-  public setChainsConfig = <
-    C extends string,
-    P extends string,
-    T extends TChainsConfig<C, P>
-  >(
-    config: TAppliedChainsConfig<C, P, T>
-  ): ConnectWallet => {
-    this.config = config;
     return this;
   };
 
