@@ -185,3 +185,4 @@ export declare class ConnectWallet {
      */
     eventSubscriber(): Observable<IEvent | IEventError>;
 }
+export * from './utils';

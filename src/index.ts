@@ -425,3 +425,5 @@ export class ConnectWallet {
     });
   }
 }
+
+export * from './utils';
