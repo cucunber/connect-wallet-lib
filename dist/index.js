@@ -10,9 +10,6 @@ var __createBinding = (this && this.__createBinding) || (Object.create ? (functi
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
 }));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -53,7 +50,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-exports.ConnectWallet = void 0;
+exports.createConfig = exports.ConnectWallet = void 0;
 var web3_1 = __importDefault(require("web3"));
 var rxjs_1 = require("rxjs");
 var helpers_1 = require("./helpers");
@@ -403,4 +400,5 @@ var ConnectWallet = /** @class */ (function () {
     return ConnectWallet;
 }());
 exports.ConnectWallet = ConnectWallet;
-__exportStar(require("./utils"), exports);
+var utils_2 = require("./utils");
+__createBinding(exports, utils_2, "createConfig");

@@ -426,4 +426,4 @@ export class ConnectWallet {
   }
 }
 
-export * from './utils';
+export { createConfig } from './utils';
